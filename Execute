@@ -1,0 +1,49 @@
+:init
+@echo off
+setlocal EnableDelayedExpansion
+cls
+color 0F
+goto vars
+
+:vars
+set loop=0
+set count=0
+set variable[]=0
+set increment=0
+goto start
+
+:start
+for /l %%a in (0, 1, 23) do (
+	set /a variable[%%a]=!random! %%365 +1
+)
+
+:compare
+if !increment! GEQ 24 (
+	set /a increment=0
+	set /a count+=1
+)
+if !count! GEQ 24 (
+goto nosuccess
+)
+if !count! EQU !increment! (
+	set /a increment+=1
+	goto compare
+)
+if !variable[%count%]! EQU !variable[%increment%]! (
+goto success
+) else (
+	set /a increment+=1
+	goto compare
+)
+
+:success
+color 02
+echo match found!
+pause
+goto init
+
+:nosuccess
+color 04
+echo no match found!
+pause
+goto init
